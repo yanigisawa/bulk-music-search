@@ -4,7 +4,7 @@ import json
 import urllib2
 import urllib
 
-fileName = "tmp.txt"
+fileName = "searchTerms.txt"
 
 def getYouTubeLinkFromJson(youTubeSearchJson):
     data = json.load(youTubeSearchJson)
@@ -37,7 +37,7 @@ def printHtmlFile(termTuple):
     with open("index.html", 'w') as f:
         f.write(beginHtml)
         for item in termTuple:
-            f.write(itemHtml.format(item[0], item[1]))
+            f.write(itemHtml.format(urllib.unquote(item[0]), item[1]))
         f.write(endhtml)
 
 def main():
@@ -47,7 +47,6 @@ def main():
     termTuple = []
     for term in searchTerms:
         url = baseUrl.format(term)
-        print("Searching on term: {0}".format(urllib.unquote(term)))
         ytJson = urllib2.urlopen(url)
         videoLink = getYouTubeLinkFromJson(ytJson)
         termTuple.append((term, videoLink))
