@@ -4,7 +4,7 @@ import json
 import urllib2
 import urllib
 
-fileName = "searchTerms.txt"
+fileName = "searchTerms2.txt"
 
 def getYouTubeLinkFromJson(youTubeSearchJson):
     data = json.load(youTubeSearchJson)
@@ -22,7 +22,7 @@ def getSearchTermListFromFile():
     searchTerms = []
     with open(fileName) as f:
         for line in f:
-            searchTerms.append(urllib.quote_plus(line.strip()))
+            searchTerms.append(line.strip())
 
     return searchTerms
 
@@ -46,7 +46,7 @@ def main():
     baseUrl = "https://gdata.youtube.com/feeds/api/videos?q={0}&v=2&alt=json&max-results=1"
     termTuple = []
     for term in searchTerms:
-        url = baseUrl.format(term)
+        url = baseUrl.format(urllib.quote_plus(term))
         ytJson = urllib2.urlopen(url)
         videoLink = getYouTubeLinkFromJson(ytJson)
         termTuple.append((term, videoLink))
