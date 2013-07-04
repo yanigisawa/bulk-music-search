@@ -1,0 +1,45 @@
+<html>
+<body>
+<style>
+	ul { list-style-type: none; }
+	body { margin-left: 5px }
+	.loading { display: none; }
+	.center { margin-left: auto; margin-right: auto; }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+<div class="center">
+	<p>Enter Youtube terms to search, one per line:</p>
+	<textarea id="searchTerms" rows="20" cols="50"></textarea>
+	<p/>
+	<input type="button" id="refresh" value="Search"/>
+	<img src="285.gif" class="loading" id="loading" />
+	<div id="videos"></div>
+</div>
+
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#refresh").click(function () {
+			$(".loading").fadeToggle();
+			$("#videos").toggle('slow', function () {
+				$.ajax({
+					type: "POST",
+					url: "bulkSearch.py",
+					data: { searchTerms: $("#searchTerms").val() },
+					success: function(data) {
+						$("#videos").html(data);
+						$("#videos").toggle('slow');
+						$("#loading").fadeToggle();
+					},
+					error: function() { 
+						$("#loading").fadeToggle();
+						alert("failed ajax call."); 
+					}
+				})
+			});
+		});
+	});
+</script>
+</body>
+</html>
