@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
 
 <div class="center">
-	<p>Enter Youtube terms to search, one per line:</p>
+	<p>Enter YouTube terms to search, one per line:</p>
 	<textarea id="searchTerms" rows="20" cols="50"></textarea>
 	<p/>
 	<input type="button" id="refresh" value="Search"/>
@@ -21,6 +21,14 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#refresh").click(function () {
+			if(!$.trim($("#searchTerms").val()).length) {
+				var errorMessage = "Enter search terms, one per line. E.g.:\n";
+				errorMessage += "waltz\n";
+				errorMessage += "foxtrot\n";
+				errorMessage += "cha cha";
+				alert(errorMessage);
+				return;
+			}
 			$(".loading").fadeToggle();
 			$("#videos").toggle('slow', function () {
 				$.ajax({
