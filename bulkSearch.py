@@ -40,6 +40,17 @@ def printHtmlFile(termTuple):
             f.write(itemHtml.format(urllib.unquote(item[0]), item[1]))
         f.write(endhtml)
 
+def printAjaxHtml(termTuple):
+    print("Content-Type: text/html")
+    print # blank line, end of header
+    itemHtml = """
+        <h2>{0}</h2>
+        <iframe width="420" height="315" src="{1}" frameborder="0" allowfullscreen></iframe>
+    """
+    for item in termTuple:
+        print(itemHtml.format(urllib.unquote(item[0]), item[1]))
+    
+
 def main():
     searchTerms = getSearchTermListFromFile()
 
@@ -51,7 +62,8 @@ def main():
         videoLink = getYouTubeLinkFromJson(ytJson)
         termTuple.append((term, videoLink))
         
-    printHtmlFile(termTuple)
+    #printHtmlFile(termTuple)
+    printAjaxHtml(termTuple)
 
 
 main()
