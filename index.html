@@ -35,14 +35,14 @@
     function searchOnTerm(searchTerm) {
         if (isEmpty(searchTerm) || isBlank(searchTerm)) { return ; }
 
-        document.getElementById("videos").innerHTML += "<p>Searching on: " + searchTerm + "</p>";
+        $("#videos").append("<p>Searching on: " + searchTerm + "</p>");
 
         $.ajax({
             type: "POST",
             url: "bulkSearch.py",
             data: { searchTerms: searchTerm },
             success: function(data) {
-                document.getElementById("videos").innerHTML += data;
+                $("#videos").append(data);
                 termArrayIndex++;
                 if (termArrayIndex < termArrayLength) {
                     searchOnTerm(termArray[termArrayIndex]);
@@ -67,7 +67,7 @@
 
             $("#videos").toggle('slow');
 			$(".loading").fadeToggle();
-            document.getElementById("videos").innerHTML = "";
+            $("#videos").html("");
 
             termArray = $("#searchTerms").val().split("\n");
             termArrayLength = termArray.length;
