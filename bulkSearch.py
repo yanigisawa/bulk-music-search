@@ -11,13 +11,16 @@ fileName = "tmp.txt"
 def getYouTubeLinkFromJson(youTubeSearchJson):
     data = json.load(youTubeSearchJson)
 
-    contentDict = data["feed"]["entry"][0]["media$group"]["media$content"]
-
     url = ""
-    for mediaDict in contentDict:
-        if mediaDict["type"] == "application/x-shockwave-flash":
-            url = mediaDict["url"]
-            break
+
+    if "entry" in data["feed"]:
+        contentDict = data["feed"]["entry"][0]["media$group"]["media$content"]
+
+        for mediaDict in contentDict:
+            if mediaDict["type"] == "application/x-shockwave-flash":
+                url = mediaDict["url"]
+                break
+
     return url
 
 def getSearchTermListFromFile():
@@ -57,8 +60,15 @@ def printAjaxHtml(termTuple):
         <h2>{0}</h2>
         <iframe width="420" height="315" src="{1}" frameborder="0" allowfullscreen></iframe>
     """
+    noResultHtml = """
+        <h2>{0}</h2>
+        <h3>No Result found for search term</h3>
+    """
     for item in termTuple:
-        print(itemHtml.format(item[0], item[1]))
+        if len(item[1].strip()) > 0:
+            print(itemHtml.format(item[0], item[1]))
+        else:
+            print(noResultHtml.format(item[0]))
     
 
 def main():

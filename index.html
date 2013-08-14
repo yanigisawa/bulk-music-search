@@ -29,7 +29,9 @@
 				alert(errorMessage);
 				return;
 			}
+
 			$(".loading").fadeToggle();
+            
 			$("#videos").toggle('slow', function () {
 				$.ajax({
 					type: "POST",
@@ -37,13 +39,14 @@
 					data: { searchTerms: $("#searchTerms").val() },
 					success: function(data) {
 						$("#videos").html(data);
-						$("#videos").toggle('slow');
-						$("#loading").fadeToggle();
 					},
 					error: function() { 
-						$("#loading").fadeToggle();
 						alert("failed ajax call."); 
-					}
+					},
+                    complete: function() {
+						$("#videos").toggle('slow');
+						$("#loading").fadeToggle();
+                    }
 				})
 			});
 		});
