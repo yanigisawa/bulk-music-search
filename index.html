@@ -19,6 +19,41 @@
 
 <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript">
+    
+    var termArray;
+    var termArrayIndex;
+    var termArrayLength;
+
+    function isEmpty(str) {
+        return (!str || 0 === str.length);
+    }
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    function searchOnTerm(searchTerm) {
+        if (isEmpty(searchTerm) || isBlank(searchTerm)) { return ; }
+
+        document.getElementById("videos").innerHTML += "<p>Searching on: " + searchTerm + "</p>";
+
+        $.ajax({
+            type: "POST",
+            url: "bulkSearch.py",
+            data: { searchTerms: searchTerm },
+            success: function(data) {
+                document.getElementById("videos").innerHTML += data;
+                termArrayIndex++;
+                if (termArrayIndex < termArrayLength) {
+                    searchOnTerm(termArray[termArrayIndex]);
+                }
+            },
+            error: function() { 
+                alert("failed ajax call."); 
+            }
+        });
+    }
+
 	$(document).ready(function() {
 		$("#refresh").click(function () {
 			if(!$.trim($("#searchTerms").val()).length) {
@@ -30,25 +65,18 @@
 				return;
 			}
 
+            $("#videos").toggle('slow');
 			$(".loading").fadeToggle();
-            
-			$("#videos").toggle('slow', function () {
-				$.ajax({
-					type: "POST",
-					url: "bulkSearch.py",
-					data: { searchTerms: $("#searchTerms").val() },
-					success: function(data) {
-						$("#videos").html(data);
-					},
-					error: function() { 
-						alert("failed ajax call."); 
-					},
-                    complete: function() {
-						$("#videos").toggle('slow');
-						$("#loading").fadeToggle();
-                    }
-				})
-			});
+            document.getElementById("videos").innerHTML = "";
+
+            termArray = $("#searchTerms").val().split("\n");
+            termArrayLength = termArray.length;
+            termArrayIndex = 0;
+
+            searchOnTerm(termArray[termArrayIndex]);
+
+            $("#videos").toggle('slow');
+            $("#loading").fadeToggle();
 		});
 	});
 </script>
